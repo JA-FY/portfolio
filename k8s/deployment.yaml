@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: portfolio
-        image: jafy10/my-portfolio:latest 
+        image: jafy10/portfolio:latest 
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
