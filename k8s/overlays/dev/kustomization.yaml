@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: portfolio-dev 
+resources:
+- ../../base
+
+images:
+- name: portfolio-image-placeholder
+  newName: jafy10/portfolio
+  newTag: dev
+
+replicas:
+- name: portfolio
+  count: 1
+

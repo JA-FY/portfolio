@@ -1,29 +1,69 @@
-name: Build and Push Docker Image
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+      - develop
+    paths-ignore:
+      - 'k8s/**' 
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: Calculate Metadata (Tags & Environment)
+        id: meta
+        run: |
+          SHA=$(git rev-parse --short HEAD)
+          echo "SHA=$SHA" >> $GITHUB_OUTPUT
+          
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "ENV=prod" >> $GITHUB_OUTPUT
+            echo "IMAGE_TAG=prod-$SHA" >> $GITHUB_OUTPUT
+          else
+            echo "ENV=dev" >> $GITHUB_OUTPUT
+            echo "IMAGE_TAG=dev-$SHA" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Build and push
-        uses: docker/build-push-action@v4
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: jafy10/portfolio:latest 
-          platforms: linux/amd64
+          tags: jafy10/portfolio:${{ steps.meta.outputs.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Setup Kustomize
+        uses: imranismail/setup-kustomize@v2
+
+      - name: Update Kubernetes Manifests (GitOps)
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "deploy@jafy.lat"
+
+          cd k8s/overlays/${{ steps.meta.outputs.ENV }}
+
+          kustomize edit set image jafy10/portfolio=jafy10/portfolio:${{ steps.meta.outputs.IMAGE_TAG }}
+          
+          cd ../../..
+
+          git add k8s/overlays/${{ steps.meta.outputs.ENV }}/kustomization.yaml
+          git commit -m "Deploy ${{ steps.meta.outputs.ENV }}: Update image to ${{ steps.meta.outputs.IMAGE_TAG }}"
+          git push
