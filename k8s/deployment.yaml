@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: portfolio
-  namespace: portfolio 
+  namespace: portfolio
 spec:
-  replicas: 2 
+  replicas: 2
   selector:
     matchLabels:
       app: portfolio
@@ -18,25 +18,39 @@ spec:
         image: alpine:latest
         command: ["/bin/sh", "-c"]
         args:
-        - ip route add blackhole 192.168.0.0/16;
+        - ip route add blackhole 192.168.0.0/16
         securityContext:
           capabilities:
-            add: ["NET_ADMIN"] 
+            add: ["NET_ADMIN"]
+
       containers:
       - name: portfolio
-        image: jafy10/portfolio:latest 
+        image: jafy10/portfolio:latest
+        imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
-          runAsUser: 1000 
+          runAsUser: 1000
           capabilities:
             drop:
-            - ALL 
-          readOnlyRootFilesystem: false
-        imagePullPolicy: Always
+            - ALL
+          readOnlyRootFilesystem: true
         ports:
         - containerPort: 3000
+        
         resources:
           limits:
             memory: "256Mi"
             cpu: "500m"
+
+        volumeMounts:
+        - name: tmp-volume
+          mountPath: /tmp
+        - name: next-cache
+          mountPath: /app/.next/cache
+
+      volumes:
+      - name: tmp-volume
+        emptyDir: {}
+      - name: next-cache
+        emptyDir: {}
