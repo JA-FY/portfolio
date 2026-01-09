@@ -23,7 +23,7 @@ spec:
 
       containers:
       - name: portfolio
-        image: portfolio-image-placeholder 
+        image: jafy10/portfolio 
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
