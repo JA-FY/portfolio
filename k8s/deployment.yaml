@@ -13,13 +13,22 @@ spec:
       labels:
         app: portfolio
     spec:
+      initContainers:
+      - name: lockdown-network
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - ip route add blackhole 192.168.0.0/16;
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"] 
       containers:
       - name: portfolio
         image: jafy10/portfolio:latest 
         securityContext:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
-          runAsUser: 101 
+          runAsUser: 1000 
           capabilities:
             drop:
             - ALL 
