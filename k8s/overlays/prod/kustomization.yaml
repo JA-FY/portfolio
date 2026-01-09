@@ -5,19 +5,22 @@ resources:
 - ../../base
 
 images:
+- name: jafy10/portfolio
+  newName: jafy10/portfolio
+  newTag: prod-176ada6
 - name: portfolio-image-placeholder
   newName: jafy10/portfolio
   newTag: latest
 
 replicas:
-- name: portfolio
-  count: 2
+- count: 2
+  name: portfolio
 
 patches:
-- target:
-    kind: Deployment
-    name: portfolio
-  patch: |-
+- patch: |-
     - op: add
       path: /spec/template/spec/containers/0/securityContext/readOnlyRootFilesystem
       value: true
+  target:
+    kind: Deployment
+    name: portfolio
