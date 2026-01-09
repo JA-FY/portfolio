@@ -16,6 +16,14 @@ spec:
       containers:
       - name: portfolio
         image: jafy10/portfolio:latest 
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 101 
+          capabilities:
+            drop:
+            - ALL 
+          readOnlyRootFilesystem: false
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
