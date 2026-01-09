@@ -8,9 +8,6 @@ images:
 - name: jafy10/portfolio
   newName: jafy10/portfolio
   newTag: dev-ce15421
-- name: portfolio-image-placeholder
-  newName: jafy10/portfolio
-  newTag: dev
 
 replicas:
 - count: 1
