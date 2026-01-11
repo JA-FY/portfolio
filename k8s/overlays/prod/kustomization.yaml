@@ -7,7 +7,7 @@ resources:
 images:
 - name: jafy10/portfolio
   newName: jafy10/portfolio
-  newTag: prod-176ada6
+  newTag: prod-2b24afe
 - name: portfolio-image-placeholder
   newName: jafy10/portfolio
   newTag: latest
@@ -17,10 +17,7 @@ replicas:
   name: portfolio
 
 patches:
-- target:
-    kind: Deployment
-    name: portfolio
-  patch: |-
+- patch: |-
     apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -42,3 +39,6 @@ patches:
                 secretKeyRef:
                   name: tunnel-credentials
                   key: token
+  target:
+    kind: Deployment
+    name: portfolio
