@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "JAFY's Blog",
+  title: "JAFY - Engineering Log",
 };
 
 export default function RootLayout({
