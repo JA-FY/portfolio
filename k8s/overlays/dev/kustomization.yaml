@@ -7,17 +7,14 @@ resources:
 images:
 - name: jafy10/portfolio
   newName: jafy10/portfolio
-  newTag: dev-ce15421
+  newTag: dev-643359f
 
 replicas:
 - count: 1
   name: portfolio
 
 patches:
-- target:
-    kind: Deployment
-    name: portfolio
-  patch: |-
+- patch: |-
     apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -39,10 +36,10 @@ patches:
                 secretKeyRef:
                   name: tunnel-credentials
                   key: token
-- target:
+  target:
     kind: Deployment
     name: portfolio
-  patch: |-
+- patch: |-
     apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -55,4 +52,6 @@ patches:
             env:
             - name: HOSTNAME
               value: "0.0.0.0"
-
+  target:
+    kind: Deployment
+    name: portfolio
