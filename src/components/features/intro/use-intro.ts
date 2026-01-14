@@ -18,19 +18,43 @@ export function useIntro() {
 
     document.body.style.overflow = 'hidden';
 
-    const handleInteraction = (e: Event) => {
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY > 0) {
         setStatus('exiting');
+      }
     };
 
-    window.addEventListener('wheel', handleInteraction, { once: true });
-    window.addEventListener('touchstart', handleInteraction, { once: true });
+    let touchStartY: number | null = null;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (touchStartY === null) return;
+
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaY = touchStartY - touchEndY;
+
+      if (deltaY > 10) {
+        setStatus('exiting');
+      }
+
+      touchStartY = null;
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
-      window.removeEventListener('wheel', handleInteraction);
-      window.removeEventListener('touchstart', handleInteraction);
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
       document.body.style.overflow = '';
     };
   }, [status]);
 
   return { currentLangIndex, status, setStatus };
 }
+

@@ -1,8 +1,65 @@
 @import "tailwindcss";
 
+:root {
+  --base-hue: 262.04;
+
+  --white: oklch(100% 0 0);
+  
+  --gray-000: oklch(12.92% 0.005 var(--base-hue));
+  --gray-100: oklch(14.68% 0.01 var(--base-hue)); 
+  --gray-200: oklch(16.75% 0.011 var(--base-hue));
+  --gray-300: oklch(17.8% 0.012 var(--base-hue));
+  --gray-400: oklch(24.84% 0.018 var(--base-hue));
+  --gray-500: oklch(28.69% 0.023 var(--base-hue));
+  --gray-600: oklch(35.33% 0.028 var(--base-hue));
+  --gray-700: oklch(41.6% 0.035 var(--base-hue));
+  --gray-800: oklch(48.49% 0.042 var(--base-hue));
+  --gray-900: oklch(56.78% 0.05 var(--base-hue));
+  --gray-1000: oklch(66.65% 0.04 var(--base-hue));
+  --gray-1100: oklch(77.16% 0.028 var(--base-hue));
+  --gray-1200: oklch(94.23% 0.006 var(--base-hue));
+
+  --blue-400: oklch(93.66% 0.027 var(--base-hue));
+  --blue-800: oklch(61.53% 0.1675 var(--base-hue));
+  --blue-900: oklch(53.19% 0.212 var(--base-hue));
+
+  --accent: var(--blue-800);
+  --background: var(--gray-100);
+  --foreground: var(--gray-300);
+  --border-color: var(--gray-400);
+
+  --text-primary: var(--blue-400);
+  --text-secondary: var(--gray-1100);
+  --text-tertiary: var(--gray-1000);
+}
+
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  
+  --color-border-custom: var(--border-color);
+
+  --color-gray-000: var(--gray-000);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+
+  --font-sans: var(--font-sans); 
+  --font-mono: var(--font-mono);
 }
 
 @source "../";
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--text-primary);
+  }
+}

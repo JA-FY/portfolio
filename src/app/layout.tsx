@@ -1,6 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter, JetBrains_Mono } from "next/font/google";
 import "../styles/globals.css";
+import {LazyMotion, domAnimation} from "framer-motion";
+
+const inter = Inter({
+	subsets: ['latin'],
+	variable: '--font-sans',
+	display: 'swap',
+});
+
+const jetbrains = JetBrains_Mono({
+	subsets: ['latin'],
+	variable: '--font-mono',
+	display: 'swap',
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,9 +37,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} ${jetbrains.variable} bg-background antialiased`}
       >
+      <LazyMotion features={domAnimation}>
         {children}
+      </LazyMotion>
       </body>
     </html>
   );
