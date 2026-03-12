@@ -112,7 +112,8 @@ const [positions, colors, initialPositions, sizes] = useMemo(() => {
     material.current.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, 2);
 
     if (scrollProgress) {
-      const scroll = scrollProgress.get(); 
+      const rawScroll = scrollProgress.get(); 
+      const scroll = Math.max(0, Math.min(1, rawScroll));
       const targetZ = THREE.MathUtils.lerp(8.0, -3.0, scroll);
       camera.position.z = targetZ;
     }
