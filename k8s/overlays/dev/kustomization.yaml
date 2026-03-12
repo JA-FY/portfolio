@@ -7,7 +7,7 @@ resources:
 images:
 - name: jafy10/portfolio
   newName: jafy10/portfolio
-  newTag: dev-1e7b049
+  newTag: dev-2827264
 
 replicas:
 - count: 1
