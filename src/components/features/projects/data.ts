@@ -10,7 +10,7 @@ export interface Project {
 export const projects: Project[] = [
   {
     id: 'k8s-cluster',
-    title: 'Home Lab Cluster',
+    title: 'Server Cluster',
     description: 'Multi-node Kubernetes cluster running on bare metal. Automated CI/CD pipelines with ArgoCD and monitoring via Prometheus/Grafana.',
     tech: ['Kubernetes', 'Ubuntu-Server', 'Go'],
     status: 'Live',
