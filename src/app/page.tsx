@@ -15,7 +15,7 @@ const GuatemalanParticles = dynamic(
 
 export default function Home() {
   const { currentLangIndex, status, setStatus } = useIntro();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
   
   useLayoutEffect(() => {
     if (typeof window !== 'undefined') {
@@ -28,17 +28,16 @@ export default function Home() {
   }, []);
 
   const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
+    target: heroRef,
+    offset: ["start start", "end start"]
   });
 
-  const contentOpacity = useTransform(scrollYProgress, [0.85, 1], [0, 1]);
-  const contentPointerEvents = useTransform(scrollYProgress, (val) => val > 0.85 ? 'auto' : 'none');
   const introOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const contentVisibility = useTransform(scrollYProgress, (val) => val > 0.85 ? 'visible' : 'hidden');
 
   return (
-    <main ref={containerRef} className="relative h-[400vh] bg-transparent selection:bg-cyan-500/30">
+    <main className="relative bg-transparent selection:bg-cyan-500/30">
+      <div ref={heroRef} className="h-[400vh] w-full pointer-events-none" />
+      
       <GuatemalanParticles scrollProgress={scrollYProgress} />
 
       <m.div style={{ opacity: introOpacity }} className=" will-change-opacity bg-transparent fixed inset-0 z-40 pointer-events-none">
@@ -52,11 +51,7 @@ export default function Home() {
         </div>
       </m.div>
 
-      <HomeContent 
-        opacity={contentOpacity} 
-        pointerEvents={contentPointerEvents} 
-	visibility={contentVisibility}
-      />
+      <HomeContent />
     </main>
   );
 }

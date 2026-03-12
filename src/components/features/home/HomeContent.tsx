@@ -6,19 +6,10 @@ import Footer from '@/components/layout/footer';
 import { ProjectCard } from '../projects/ProjectCard';
 import { projects } from '../projects/data';
 
-interface HomeContentProps {
-  opacity: MotionValue<number>;
-  pointerEvents: MotionValue<"auto" | "none">;
-  visibility: MotionValue<"visible" | "hidden">;
-}
-
-export function HomeContent({ opacity, pointerEvents, visibility }: HomeContentProps) {
+export function HomeContent() {
   return (
-    <motion.div 
-      style={{ opacity, pointerEvents, visibility }}
-      className="fixed inset-0 z-50 overflow-y-auto"
-    >
-      <Header show={true} />
+    <div className="relative z-50 w-full bg-transparent">
+      <Header />
       
       <div className="min-h-screen flex flex-col items-center pt-32 pb-20">
          
@@ -38,7 +29,7 @@ export function HomeContent({ opacity, pointerEvents, visibility }: HomeContentP
                Projects 
               </h3>
                <p className="w-1/2 text-start text-neutral-400 font-mono text-sm">
-	       These cover a wide range of technologies. Some of them are internal tools while others are public-facing. I strongly believe in cooperation so, even though not all of them have a public GitHub repo, these come with an explanation of the tools I used and part of the decision making along the way.home
+	       These cover a wide range of technologies. Some of them are internal tools while others are public-facing. I strongly believe in cooperation so, even though not all of them have a public GitHub repo, these come with an explanation of the tools I used and part of the decision making along the way.
               </p>
 
             </div>
@@ -55,6 +46,6 @@ export function HomeContent({ opacity, pointerEvents, visibility }: HomeContentP
             <Footer />
          </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
