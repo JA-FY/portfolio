@@ -127,15 +127,14 @@ const [positions, colors, initialPositions, sizes] = useMemo(() => {
           points.current.rotation.x = THREE.MathUtils.lerp(points.current.rotation.x, 0, 5.0 * delta);
         }
       } else {
-        // Mag 7 pattern: Premium eye-catching idle animation for mobile
-        if (points.current) {
-          const targetRotY = Math.sin(clock.getElapsedTime() * 0.3) * 0.25;
-          const targetRotX = Math.cos(clock.getElapsedTime() * 0.2) * 0.15;
-          points.current.rotation.y = THREE.MathUtils.lerp(points.current.rotation.y, targetRotY, 5.0 * delta);
-          points.current.rotation.x = THREE.MathUtils.lerp(points.current.rotation.x, targetRotX, 5.0 * delta);
-        }
-        // Very subtle camera breathing
+        // Very subtle camera breathing, without the side-to-side container rotation
         targetZ = 8.0 + Math.sin(clock.getElapsedTime() * 0.4) * 0.6;
+        
+        if (points.current) {
+          // Zero out rotation in case they switch from a weird state
+          points.current.rotation.y = THREE.MathUtils.lerp(points.current.rotation.y, 0, 5.0 * delta);
+          points.current.rotation.x = THREE.MathUtils.lerp(points.current.rotation.x, 0, 5.0 * delta);
+        }
       }
       
       // Mag 7 pattern: Dampen the camera movement for a silky smooth feel independent of input jitter
