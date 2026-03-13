@@ -7,7 +7,7 @@ import { MotionValue } from 'framer-motion';
 
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 1000;
 
-const PARTICLE_COUNT = isMobile ? 10000 : 25000; 
+const PARTICLE_COUNT = isMobile ? 3500 : 25000; 
 const FLAG_BLUE = new THREE.Color('#91d3fa'); 
 const FLAG_WHITE = new THREE.Color('#FFFFFF');
 
@@ -25,12 +25,15 @@ const vertexShader = `
   
   varying vec3 vColor;
 
+  uniform float uIsMobile;
+
   void main() {
     vColor = aColor;
     vec3 pos = aInitialPosition;
     
-    pos.x += sin(uTime * 0.2 + pos.z) * 0.02;
-    pos.y += cos(uTime * 0.1 + pos.x) * 0.02;
+    float movementScore = 1.0 - uIsMobile;
+    pos.x += sin(uTime * 0.2 + pos.z) * 0.02 * movementScore;
+    pos.y += cos(uTime * 0.1 + pos.x) * 0.02 * movementScore;
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
     
@@ -102,9 +105,10 @@ const [positions, colors, initialPositions, sizes] = useMemo(() => {
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
     uPixelRatio: { value: typeof window !== 'undefined' ? Math.min(window.devicePixelRatio, 2) : 1 },
+    uIsMobile: { value: typeof window !== 'undefined' && window.innerWidth < 1000 ? 1.0 : 0.0 },
   }), []);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const { clock } = state;
     
     material.current.uniforms.uTime.value = clock.getElapsedTime() % 10000;
@@ -114,8 +118,27 @@ const [positions, colors, initialPositions, sizes] = useMemo(() => {
     if (scrollProgress) {
       const rawScroll = scrollProgress.get(); 
       const scroll = Math.max(0, Math.min(1, rawScroll));
-      const targetZ = THREE.MathUtils.lerp(8.0, -3.0, scroll);
-      camera.position.z = targetZ;
+      
+      const isMobileDevice = window.innerWidth < 1000;
+      material.current.uniforms.uIsMobile.value = isMobileDevice ? 1.0 : 0.0;
+      let targetZ = 8.0;
+      
+      if (!isMobileDevice) {
+        targetZ = THREE.MathUtils.lerp(8.0, -3.0, scroll);
+        if (points.current) {
+          points.current.rotation.y = THREE.MathUtils.lerp(points.current.rotation.y, 0, 5.0 * delta);
+          points.current.rotation.x = THREE.MathUtils.lerp(points.current.rotation.x, 0, 5.0 * delta);
+        }
+      } else {
+        targetZ = 8.0;
+        
+        if (points.current) {
+          points.current.rotation.y = THREE.MathUtils.lerp(points.current.rotation.y, 0, 5.0 * delta);
+          points.current.rotation.x = THREE.MathUtils.lerp(points.current.rotation.x, 0, 5.0 * delta);
+        }
+      }
+      
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 5.0 * delta);
     }
   });
 
@@ -148,7 +171,7 @@ interface Props {
 
 export default function GuatemalanParticles({ scrollProgress }: Props) {
   return (
-    <div className="fixed inset-0 -z-10 bg-background">
+    <div className="w-full h-full pointer-events-none">
       <Canvas 
         camera={{ position: [0, 0, 8], fov: 50 }} 
         gl={{ powerPreference: "high-performance", antialias: false }}

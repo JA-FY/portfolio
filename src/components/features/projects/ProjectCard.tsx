@@ -1,8 +1,20 @@
 import { Project } from './data';
+import { useToast } from '@/components/ui/ToastContext';
 
 export function ProjectCard({ project }: { project: Project }) {
+  const { showToast } = useToast();
+
+  const handleClick = () => {
+    if (project.id === 'k8s-cluster') {
+      showToast('Server details coming soon');
+    }
+  };
+
   return (
-    <div className="group relative flex flex-col p-6 rounded-xl border border-white/10 backdrop-blur-md hover:bg-black/40 hover:border-white/20 transition-all duration-300">
+    <div 
+      onClick={handleClick}
+      className="group relative flex flex-col p-6 rounded-xl border border-white/10 backdrop-blur-md hover:bg-black/40 hover:border-white/20 transition-all duration-300 cursor-pointer"
+    >
       
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">

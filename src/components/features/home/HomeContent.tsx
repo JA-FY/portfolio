@@ -20,11 +20,11 @@ export function HomeContent() {
                The Output 
               </h2>
               <p className="text-center text-neutral-400 font-mono text-sm">
-               A curated collection of my best work, the tools that enable it, and the lessons learned over the years 
+               A curated collection of my best work, the tools that enable it, and the lessons learned over the years. 
               </p>
             </div>
 
-            <div className="flex flex-col items-center mb-8 md:mb-16">
+            <div id="projects-section" className="flex flex-col items-center mb-8 md:mb-16 scroll-m-32">
               <h3 className="text-center text-4xl sm:text-5xl md:text-6xl font-thin text-white tracking-tighter mb-4 md:mb-6">
                Projects 
               </h3>
