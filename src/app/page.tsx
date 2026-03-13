@@ -33,12 +33,18 @@ export default function Home() {
   });
 
   const introOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const particlesOpacity = useTransform(scrollYProgress, [0.8, 1], [1, 0]);
 
   return (
     <main className="relative bg-transparent selection:bg-cyan-500/30">
-      <div ref={heroRef} className="h-[400vh] w-full pointer-events-none" />
+      <div ref={heroRef} className="h-[120svh] md:h-[400vh] w-full pointer-events-none" />
       
-      <GuatemalanParticles scrollProgress={scrollYProgress} />
+      <m.div 
+        style={{ opacity: particlesOpacity }} 
+        className="fixed top-0 left-0 w-full h-[100svh] -z-10 bg-background pointer-events-none"
+      >
+        <GuatemalanParticles scrollProgress={scrollYProgress} />
+      </m.div>
 
       <m.div style={{ opacity: introOpacity }} className=" will-change-opacity bg-transparent fixed inset-0 z-40 pointer-events-none">
         <Intro 

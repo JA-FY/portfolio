@@ -20,7 +20,7 @@ export function HomeContent() {
                The Output 
               </h2>
               <p className="text-center text-neutral-400 font-mono text-sm">
-               A curated collection of my best work, the tools that enable it, and the lessons learned over the years 
+               A curated collection of my best work, the tools that enable it, and the lessons learned over the years. 
               </p>
             </div>
 

@@ -104,7 +104,7 @@ const [positions, colors, initialPositions, sizes] = useMemo(() => {
     uPixelRatio: { value: typeof window !== 'undefined' ? Math.min(window.devicePixelRatio, 2) : 1 },
   }), []);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const { clock } = state;
     
     material.current.uniforms.uTime.value = clock.getElapsedTime() % 10000;
@@ -114,8 +114,16 @@ const [positions, colors, initialPositions, sizes] = useMemo(() => {
     if (scrollProgress) {
       const rawScroll = scrollProgress.get(); 
       const scroll = Math.max(0, Math.min(1, rawScroll));
-      const targetZ = THREE.MathUtils.lerp(8.0, -3.0, scroll);
-      camera.position.z = targetZ;
+      
+      const isMobileDevice = window.innerWidth < 1000;
+      let targetZ = 8.0;
+      
+      if (!isMobileDevice) {
+        targetZ = THREE.MathUtils.lerp(8.0, -3.0, scroll);
+      }
+      
+      // Mag 7 pattern: Dampen the camera movement for a silky smooth feel independent of input jitter
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 5.0 * delta);
     }
   });
 
@@ -148,7 +156,7 @@ interface Props {
 
 export default function GuatemalanParticles({ scrollProgress }: Props) {
   return (
-    <div className="fixed inset-0 -z-10 bg-background">
+    <div className="w-full h-full pointer-events-none">
       <Canvas 
         camera={{ position: [0, 0, 8], fov: 50 }} 
         gl={{ powerPreference: "high-performance", antialias: false }}
