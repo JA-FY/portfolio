@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 
 
 const NAV_ITEMS = [
   { name: 'Projects' },
-  { name: 'About' },
+  { name: 'Articles' },
   { name: 'Contact' },
 ];
 
@@ -47,7 +47,7 @@ export default function Header() {
 
     <AnimatePresence>
       {hoveredIndex === index && (
-        <motion.div
+        <m.div
           layoutId="nav-pill"
           className="absolute inset-0 bg-white/10 rounded-full"
           transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}

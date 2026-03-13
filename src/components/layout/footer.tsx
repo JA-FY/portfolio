@@ -1,7 +1,7 @@
 
 export default function Footer() {
   return (
-    <footer className="footer">
+    <footer className="footer flex justify-center border-t-1 border-white">
       <div className="footer-inner">
         <p className="footer-text">
           © 2026 <span className="footer-brand">Jorge Ferguson</span>
@@ -17,9 +17,9 @@ export default function Footer() {
 
       <style jsx>{`
         .footer {
-          padding: 0.75rem 1.5rem;
           background: transparent;
-        }
+	  padding-top: 1.5rem;
+	}
 
         .footer-inner {
           display: flex;
