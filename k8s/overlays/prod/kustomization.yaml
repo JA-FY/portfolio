@@ -7,7 +7,7 @@ resources:
 images:
 - name: jafy10/portfolio
   newName: jafy10/portfolio
-  newTag: prod-412c1bc
+  newTag: prod-7c8dd96
 - name: portfolio-image-placeholder
   newName: jafy10/portfolio
   newTag: latest
