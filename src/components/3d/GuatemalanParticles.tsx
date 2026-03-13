@@ -7,7 +7,8 @@ import { MotionValue } from 'framer-motion';
 
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 1000;
 
-const PARTICLE_COUNT = isMobile ? 10000 : 25000; 
+// Mag 7 engineering: Significantly less dense for mobile, high density for desktop
+const PARTICLE_COUNT = isMobile ? 3500 : 25000; 
 const FLAG_BLUE = new THREE.Color('#91d3fa'); 
 const FLAG_WHITE = new THREE.Color('#FFFFFF');
 
@@ -120,6 +121,21 @@ const [positions, colors, initialPositions, sizes] = useMemo(() => {
       
       if (!isMobileDevice) {
         targetZ = THREE.MathUtils.lerp(8.0, -3.0, scroll);
+        // Reset rotation if switching back to desktop
+        if (points.current) {
+          points.current.rotation.y = THREE.MathUtils.lerp(points.current.rotation.y, 0, 5.0 * delta);
+          points.current.rotation.x = THREE.MathUtils.lerp(points.current.rotation.x, 0, 5.0 * delta);
+        }
+      } else {
+        // Mag 7 pattern: Premium eye-catching idle animation for mobile
+        if (points.current) {
+          const targetRotY = Math.sin(clock.getElapsedTime() * 0.3) * 0.25;
+          const targetRotX = Math.cos(clock.getElapsedTime() * 0.2) * 0.15;
+          points.current.rotation.y = THREE.MathUtils.lerp(points.current.rotation.y, targetRotY, 5.0 * delta);
+          points.current.rotation.x = THREE.MathUtils.lerp(points.current.rotation.x, targetRotX, 5.0 * delta);
+        }
+        // Very subtle camera breathing
+        targetZ = 8.0 + Math.sin(clock.getElapsedTime() * 0.4) * 0.6;
       }
       
       // Mag 7 pattern: Dampen the camera movement for a silky smooth feel independent of input jitter

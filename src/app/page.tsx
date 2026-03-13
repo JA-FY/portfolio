@@ -33,7 +33,9 @@ export default function Home() {
   });
 
   const introOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const particlesOpacity = useTransform(scrollYProgress, [0.8, 1], [1, 0]);
+  
+  // Mag 7 engineering: Fade out the flag significantly earlier so it doesn't distract from the content
+  const particlesOpacity = useTransform(scrollYProgress, [0.15, 0.45], [1, 0]);
 
   return (
     <main className="relative bg-transparent selection:bg-cyan-500/30">
