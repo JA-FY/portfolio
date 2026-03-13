@@ -24,7 +24,7 @@ export function HomeContent() {
               </p>
             </div>
 
-            <div className="flex flex-col items-center mb-8 md:mb-16">
+            <div id="projects-section" className="flex flex-col items-center mb-8 md:mb-16 scroll-m-32">
               <h3 className="text-center text-4xl sm:text-5xl md:text-6xl font-thin text-white tracking-tighter mb-4 md:mb-6">
                Projects 
               </h3>

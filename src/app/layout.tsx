@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, JetBrains_Mono } from "next/font/google";
 import "../styles/globals.css";
 import {LazyMotion, domAnimation} from "framer-motion";
+import { ToastProvider } from '@/components/ui/ToastContext';
 
 const inter = Inter({
 	subsets: ['latin'],
@@ -40,7 +41,9 @@ export default function RootLayout({
         className={`${inter.variable} ${jetbrains.variable} bg-background antialiased`}
       >
       <LazyMotion features={domAnimation}>
-        {children}
+        <ToastProvider>
+          {children}
+        </ToastProvider>
       </LazyMotion>
       </body>
     </html>

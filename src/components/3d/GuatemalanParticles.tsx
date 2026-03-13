@@ -7,7 +7,6 @@ import { MotionValue } from 'framer-motion';
 
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 1000;
 
-// Mag 7 engineering: Significantly less dense for mobile, high density for desktop
 const PARTICLE_COUNT = isMobile ? 3500 : 25000; 
 const FLAG_BLUE = new THREE.Color('#91d3fa'); 
 const FLAG_WHITE = new THREE.Color('#FFFFFF');
@@ -26,12 +25,15 @@ const vertexShader = `
   
   varying vec3 vColor;
 
+  uniform float uIsMobile;
+
   void main() {
     vColor = aColor;
     vec3 pos = aInitialPosition;
     
-    pos.x += sin(uTime * 0.2 + pos.z) * 0.02;
-    pos.y += cos(uTime * 0.1 + pos.x) * 0.02;
+    float movementScore = 1.0 - uIsMobile;
+    pos.x += sin(uTime * 0.2 + pos.z) * 0.02 * movementScore;
+    pos.y += cos(uTime * 0.1 + pos.x) * 0.02 * movementScore;
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
     
@@ -103,6 +105,7 @@ const [positions, colors, initialPositions, sizes] = useMemo(() => {
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
     uPixelRatio: { value: typeof window !== 'undefined' ? Math.min(window.devicePixelRatio, 2) : 1 },
+    uIsMobile: { value: typeof window !== 'undefined' && window.innerWidth < 1000 ? 1.0 : 0.0 },
   }), []);
 
   useFrame((state, delta) => {
@@ -117,27 +120,24 @@ const [positions, colors, initialPositions, sizes] = useMemo(() => {
       const scroll = Math.max(0, Math.min(1, rawScroll));
       
       const isMobileDevice = window.innerWidth < 1000;
+      material.current.uniforms.uIsMobile.value = isMobileDevice ? 1.0 : 0.0;
       let targetZ = 8.0;
       
       if (!isMobileDevice) {
         targetZ = THREE.MathUtils.lerp(8.0, -3.0, scroll);
-        // Reset rotation if switching back to desktop
         if (points.current) {
           points.current.rotation.y = THREE.MathUtils.lerp(points.current.rotation.y, 0, 5.0 * delta);
           points.current.rotation.x = THREE.MathUtils.lerp(points.current.rotation.x, 0, 5.0 * delta);
         }
       } else {
-        // Very subtle camera breathing, without the side-to-side container rotation
-        targetZ = 8.0 + Math.sin(clock.getElapsedTime() * 0.4) * 0.6;
+        targetZ = 8.0;
         
         if (points.current) {
-          // Zero out rotation in case they switch from a weird state
           points.current.rotation.y = THREE.MathUtils.lerp(points.current.rotation.y, 0, 5.0 * delta);
           points.current.rotation.x = THREE.MathUtils.lerp(points.current.rotation.x, 0, 5.0 * delta);
         }
       }
       
-      // Mag 7 pattern: Dampen the camera movement for a silky smooth feel independent of input jitter
       camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 5.0 * delta);
     }
   });
