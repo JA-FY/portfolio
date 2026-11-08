@@ -1,0 +1,29 @@
+name: Validate portfolio manifests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: ['ci/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: azure/setup-kubectl@776406bce94f63e41d621b960d78ee25c8b76ede # v4.0.1
+        with:
+          version: v1.34.1
+      - name: Install the YAML parser
+        run: |
+          python3 -m venv "$RUNNER_TEMP/manifest-env"
+          "$RUNNER_TEMP/manifest-env/bin/pip" install PyYAML==6.0.3
+      - name: Validate both deployment environments
+        run: "$RUNNER_TEMP/manifest-env/bin/python scripts/validate-manifests.py"
